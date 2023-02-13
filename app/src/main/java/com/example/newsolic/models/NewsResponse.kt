@@ -1,4 +1,4 @@
-package com.example.newsolic
+package com.example.newsolic.models
 
 data class NewsResponse(
     val articles: List<Article>,

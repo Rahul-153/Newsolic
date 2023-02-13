@@ -1,15 +1,13 @@
 package com.example.newsolic
 
-import android.media.Image
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 //import androidx.compose.foundation.layout.RowScopeInstance.align
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -18,16 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newsolic.api.NewsObj
+import com.example.newsolic.models.NewsResponse
 import com.example.newsolic.ui.theme.NewsolicTheme
 import com.example.newsolic.ui.theme.backgroundColor
-import com.example.newsolic.ui.theme.captionColor
-import com.example.newsolic.ui.theme.textColor
+import retrofit2.Call
+import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +39,28 @@ class MainActivity : ComponentActivity() {
                 ) {
                     previewScrollCard()
 //                    UserCard()
+                    getNews()
                 }
             }
         }
+    }
+
+    private fun getNews() {
+        val news=NewsObj.newsInstance.getBreakingNews("in",1)
+        news.enqueue(object :retrofit2.Callback<NewsResponse>{
+            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
+                val news=response.body()
+                if(news!=null)
+                {
+                    Log.d("RAhul Rathore",news.toString())
+                }
+            }
+
+            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+                Log.d("Rahul RAthore","Error in fetching news")
+            }
+
+        })
     }
 }
 
