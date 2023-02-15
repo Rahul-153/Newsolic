@@ -22,12 +22,12 @@ abstract class ArticleDatabase:RoomDatabase() {
         private val LOCK=Any()
 
         operator fun invoke(context: Context)= instance?: synchronized(LOCK){
-            instance?:createDatabase(context).also{instance= instance}
+            instance?:createDatabase(context).also{instance= it}
         }
         private fun createDatabase(context: Context)=
             Room.databaseBuilder(
                 context.applicationContext,
-                RoomDatabase::class.java,
+                ArticleDatabase::class.java,
                 "article_db.db"
             ).build()
 

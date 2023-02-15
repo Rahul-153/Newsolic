@@ -20,15 +20,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.newsolic.api.NewsObj
+import com.example.newsolic.db.ArticleDatabase
 import com.example.newsolic.models.NewsResponse
+import com.example.newsolic.repository.NewsRepository
+import com.example.newsolic.ui.NewsViewModel
+import com.example.newsolic.ui.NewsViewModelProviderFactory
 import com.example.newsolic.ui.theme.NewsolicTheme
 import com.example.newsolic.ui.theme.backgroundColor
 import retrofit2.Call
 import retrofit2.Response
 
 class MainActivity : ComponentActivity() {
+    lateinit var viewModel: NewsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
+        val newsRepository=NewsRepository(ArticleDatabase(this))
+        val viewModelProviderFactory= NewsViewModelProviderFactory(newsRepository)
+        viewModel=ViewModelProvider(this,viewModelProviderFactory).get(NewsViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContent {
             NewsolicTheme {
@@ -39,29 +49,29 @@ class MainActivity : ComponentActivity() {
                 ) {
                     previewScrollCard()
 //                    UserCard()
-                    getNews()
+//                    getNews()
                 }
             }
         }
     }
 
-    private fun getNews() {
-        val news=NewsObj.newsInstance.getBreakingNews("in",1)
-        news.enqueue(object :retrofit2.Callback<NewsResponse>{
-            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
-                val news=response.body()
-                if(news!=null)
-                {
-                    Log.d("RAhul Rathore",news.toString())
-                }
-            }
-
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                Log.d("Rahul RAthore","Error in fetching news")
-            }
-
-        })
-    }
+//    private fun getNews() {
+//        val news=NewsObj.newsInstance.getBreakingNews("in",1)
+//        news.enqueue(object :retrofit2.Callback<NewsResponse>{
+//            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
+//                val news=response.body()
+//                if(news!=null)
+//                {
+//                    Log.d("RAhul Rathore",news.toString())
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+//                Log.d("Rahul RAthore","Error in fetching news")
+//            }
+//
+//        })
+//    }
 }
 
 @Composable
