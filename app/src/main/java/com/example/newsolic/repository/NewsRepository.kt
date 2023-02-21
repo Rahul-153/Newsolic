@@ -9,5 +9,4 @@ class NewsRepository(
 ) {
     suspend fun getBreakingNews(countryCode:String,page:Int)=
         RetrofitInstance.api.getBreakingNews(countryCode,page)
-
 }
